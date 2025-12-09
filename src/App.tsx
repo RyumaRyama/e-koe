@@ -169,7 +169,6 @@ function App() {
           questionsLoaded={!!questionsData}
           userAudioUrl={userAudioUrl}
           isModelReady={isModelReady}
-          modelLoadingStatus={loadingStatus}
         />
       </div>
     </div>

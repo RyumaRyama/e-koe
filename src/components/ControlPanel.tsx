@@ -9,7 +9,6 @@ interface ControlPanelProps {
   questionsLoaded: boolean;        // 問題データが読み込まれているか
   userAudioUrl?: string;           // ユーザーの録音音声URL
   isModelReady: boolean;           // 音声認識モデルが準備完了か
-  modelLoadingStatus: string;      // モデル読み込み状況メッセージ
 }
 
 /**
@@ -28,7 +27,6 @@ export function ControlPanel({
   questionsLoaded,
   userAudioUrl,
   isModelReady,
-  modelLoadingStatus,
 }: ControlPanelProps) {
   const [isPlayingUserVoice, setIsPlayingUserVoice] = useState(false);
 
