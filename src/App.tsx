@@ -93,14 +93,14 @@ function App() {
   }
 
   return (
-    <div className="bg-slate-100 min-h-screen flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-md rounded-3xl shadow-xl overflow-hidden flex flex-col h-[750px] max-h-[90vh] relative">
+    <div className="bg-slate-100 h-[100dvh] sm:min-h-screen flex items-center justify-center p-0 sm:p-4 overflow-hidden sm:overflow-auto">
+      <div className="bg-white w-full max-w-md rounded-none sm:rounded-3xl shadow-xl overflow-hidden flex flex-col h-full sm:h-[750px] sm:max-h-[90vh] relative">
 
         {/* ヘッダー */}
         <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white z-10">
           <h1 className="font-bold text-gray-700 flex items-center gap-2">
-            <span className="material-icons-round text-blue-500">graphic_eq</span>
-            Pronunciation
+            <img src="/icon.png" alt="Eリピ" className="w-6 h-6 rounded-full" />
+            Eリピ
           </h1>
           <div className="relative">
             <select
@@ -119,42 +119,45 @@ function App() {
           </div>
         </div>
 
-        {/* メインコンテンツ */}
-        <div className="flex-1 flex flex-col items-center justify-center p-6 space-y-6 overflow-y-auto">
+        {/* メインコンテンツ - 上下固定分割 */}
+        <div className="flex-1 flex flex-col overflow-hidden">
           {!currentQuestion ? (
             // 問題が無い時
-            <div className="text-center space-y-4">
-              <p className="text-gray-500 font-medium">難易度を選択して出題ボタンを押してください</p>
-              {/* モデル読み込み状態を表示 */}
-              {!isModelReady && loadingStatus && (
-                <div className="text-sm text-blue-600 font-medium animate-pulse">
-                  {loadingStatus}
-                </div>
-              )}
+            <div className="flex-1 flex items-center justify-center p-6">
+              <div className="text-center space-y-4">
+                <p className="text-gray-500 font-medium">難易度を選択して出題ボタンを押してください</p>
+                {/* モデル読み込み状態を表示 */}
+                {!isModelReady && loadingStatus && (
+                  <div className="text-sm text-blue-600 font-medium animate-pulse">
+                    {loadingStatus}
+                  </div>
+                )}
+              </div>
             </div>
           ) : (
             // 問題が出題されている時
             <>
-              {/* 問題表示 */}
-              <QuestionCard
-                question={currentQuestion}
-                onPlayAudio={handlePlayAudio}
-                isSpeaking={isSpeaking}
-              />
+              {/* 上半分：問題表示エリア（60%） */}
+              <div className="flex-[3] flex items-center justify-center p-6 overflow-y-auto">
+                <QuestionCard
+                  question={currentQuestion}
+                />
+              </div>
 
-              {/* 結果表示 */}
-              <ResultDisplay
-                transcribedText={transcribedText}
-                userAudioUrl={userAudioUrl}
-                isCorrect={isCorrect}
-              />
+              {/* 下半分：結果表示エリア（40%） */}
+              <div className="flex-[2] flex flex-col items-center justify-center p-6 overflow-y-auto">
+                <ResultDisplay
+                  transcribedText={transcribedText}
+                  isCorrect={isCorrect}
+                />
 
-              {/* 処理中メッセージ */}
-              {(isProcessing || isRecording || (!isModelReady && loadingStatus)) && (
-                <div className="text-center text-sm text-gray-500 font-medium">
-                  {isRecording ? '録音中...' : loadingStatus || '処理中...'}
-                </div>
-              )}
+                {/* 処理中メッセージ */}
+                {(isProcessing || isRecording || (!isModelReady && loadingStatus)) && (
+                  <div className="text-center text-sm text-gray-500 font-medium mt-4">
+                    {isRecording ? '録音中...' : loadingStatus || '処理中...'}
+                  </div>
+                )}
+              </div>
             </>
           )}
         </div>
@@ -163,12 +166,14 @@ function App() {
         <ControlPanel
           onGenerateQuestion={handleGenerateQuestion}
           onRecord={handleRecord}
+          onPlayAudio={handlePlayAudio}
           isRecording={isRecording}
           hasQuestion={!!currentQuestion}
           isProcessing={isProcessing}
           questionsLoaded={!!questionsData}
           userAudioUrl={userAudioUrl}
           isModelReady={isModelReady}
+          isSpeaking={isSpeaking}
         />
       </div>
     </div>
