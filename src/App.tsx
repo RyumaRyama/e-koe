@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // 型定義
 import type { Level } from './types';
@@ -92,6 +92,16 @@ function App() {
     setIsCorrect(correct);
   }
 
+  /**
+   * 難易度が変更されたら、自動で新しい問題を出題
+   */
+  useEffect(() => {
+    if (questionsData) {
+      handleGenerateQuestion();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [level]);
+
   return (
     <div className="bg-slate-100 h-[100dvh] sm:min-h-screen flex items-center justify-center p-0 sm:p-4 overflow-hidden sm:overflow-auto">
       <div className="bg-white w-full max-w-md rounded-none sm:rounded-3xl shadow-xl overflow-hidden flex flex-col h-full sm:h-[750px] sm:max-h-[90vh] relative">
@@ -102,19 +112,22 @@ function App() {
             <img src="/icon.png" alt="Eリピ" className="w-6 h-6 rounded-full" />
             Eリピ
           </h1>
-          <div className="relative">
-            <select
-              value={level}
-              onChange={(e) => setLevel(e.target.value as Level)}
-              className="appearance-none bg-slate-100 border border-slate-200 text-gray-700 py-1.5 px-4 pr-8 rounded-full text-xs font-bold uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-200 transition-colors"
-            >
-              <option value="beginner">Beginner</option>
-              <option value="elementary">Elementary</option>
-              <option value="intermediate">Intermediate</option>
-              <option value="advanced">Advanced</option>
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
-              <span className="material-icons-round text-sm">expand_more</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-gray-500">レベル</span>
+            <div className="relative">
+              <select
+                value={level}
+                onChange={(e) => setLevel(e.target.value as Level)}
+                className="appearance-none bg-slate-100 border border-slate-200 text-gray-700 py-1.5 px-4 pr-8 rounded-full text-xs font-bold tracking-wider focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-200 transition-colors"
+              >
+                <option value="beginner">初級</option>
+                <option value="elementary">中級</option>
+                <option value="intermediate">上級</option>
+                <option value="advanced">プロ</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                <span className="material-icons-round text-sm">expand_more</span>
+              </div>
             </div>
           </div>
         </div>
@@ -128,7 +141,7 @@ function App() {
                 <p className="text-gray-500 font-medium">難易度を選択して出題ボタンを押してください</p>
                 {/* モデル読み込み状態を表示 */}
                 {!isModelReady && loadingStatus && (
-                  <div className="text-sm text-blue-600 font-medium animate-pulse">
+                  <div className="text-sm text-blue-600 font-medium loading-dots">
                     {loadingStatus}
                   </div>
                 )}
@@ -153,7 +166,7 @@ function App() {
 
                 {/* 処理中メッセージ */}
                 {(isProcessing || isRecording || (!isModelReady && loadingStatus)) && (
-                  <div className="text-center text-sm text-gray-500 font-medium mt-4">
+                  <div className={`text-center text-sm text-gray-500 font-medium mt-4 ${loadingStatus ? 'loading-dots' : ''}`}>
                     {isRecording ? '録音中...' : loadingStatus || '処理中...'}
                   </div>
                 )}

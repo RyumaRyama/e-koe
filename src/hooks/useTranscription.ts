@@ -33,9 +33,8 @@ export function useTranscription() {
       const { status, result, data } = e.data;
 
       if (status === 'loading') {
-        // モデル読み込み中
-        const progress = Math.round((data.progress || 0) * 100);
-        setLoadingStatus(`モデル読込中: ${data.file || ''} ${progress}%`);
+        // モデル読み込み中（シンプルなメッセージ）
+        setLoadingStatus('モデル読み込み中');
       } else if (status === 'ready') {
         // モデル読み込み完了
         setIsModelReady(true);

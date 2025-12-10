@@ -48,3 +48,15 @@ body {
 .recording-pulse { animation: pulse-red 1.5s infinite; }
 .playing-pulse-blue { animation: pulse-blue 1.2s infinite; }
 .playing-pulse-green { animation: pulse-green 1.2s infinite; }
+
+/* ドットアニメーション */
+@keyframes loading-dots {
+  0% { content: '.'; }
+  33% { content: '..'; }
+  66% { content: '...'; }
+}
+
+.loading-dots::after {
+  content: '.';
+  animation: loading-dots 1.5s steps(3, end) infinite;
+}

@@ -38,6 +38,14 @@ export function useQuestions() {
     setCurrentQuestion(randomQuestion);
   };
 
+  // 問題データ読み込み完了後、自動で1問目を出題
+  useEffect(() => {
+    if (questionsData && !currentQuestion) {
+      generateQuestion();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questionsData]);
+
   return {
     questionsData,
     level,
